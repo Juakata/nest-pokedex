@@ -3,13 +3,13 @@ import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 
 @Injectable()
-export class PokemonService {
+export class PokemonsService {
   create(createPokemonDto: CreatePokemonDto) {
     return 'This action adds a new pokemon';
   }
 
   findAll() {
-    return `This action returns all pokemon`;
+    return `This action returns all pokemons`;
   }
 
   findOne(id: number) {
