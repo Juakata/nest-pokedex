@@ -25,14 +25,17 @@ export class PokemonsController {
     return this.pokemonsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pokemonsService.findOne(+id);
+  @Get(':search')
+  findOne(@Param('search') search: string) {
+    return this.pokemonsService.findOne(search);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePokemonDto: UpdatePokemonDto) {
-    return this.pokemonsService.update(+id, updatePokemonDto);
+  @Patch(':term')
+  update(
+    @Param('term') term: string,
+    @Body() updatePokemonDto: UpdatePokemonDto,
+  ) {
+    return this.pokemonsService.update(term, updatePokemonDto);
   }
 
   @Delete(':id')
