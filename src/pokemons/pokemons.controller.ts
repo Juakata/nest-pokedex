@@ -40,6 +40,11 @@ export class PokemonsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.pokemonsService.remove(+id);
+    return this.pokemonsService.remove(id);
+  }
+
+  @Delete('term/:term')
+  removeBy(@Param('term') term: string) {
+    return this.pokemonsService.removeBy(term);
   }
 }
