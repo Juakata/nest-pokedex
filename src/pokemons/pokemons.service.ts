@@ -18,9 +18,22 @@ export class PokemonsService {
 
   async create(createPokemonDto: CreatePokemonDto) {
     createPokemonDto.name = createPokemonDto.name.toLocaleLowerCase();
+
     try {
-      const pokemon = await this.pokemonModel.create(createPokemonDto);
-      return pokemon;
+      return await this.pokemonModel.create(createPokemonDto);
+    } catch (error) {
+      this.handleExceptions(error);
+    }
+  }
+
+  async createBulk(createPokemonDto: CreatePokemonDto[]) {
+    createPokemonDto = createPokemonDto.map((pokemon) => ({
+      ...pokemon,
+      name: pokemon.name.toLocaleLowerCase(),
+    }));
+
+    try {
+      return await this.pokemonModel.insertMany(createPokemonDto);
     } catch (error) {
       this.handleExceptions(error);
     }
@@ -67,6 +80,12 @@ export class PokemonsService {
     return id;
   }
 
+  async removeAll() {
+    await this.pokemonModel.deleteMany();
+
+    return 'Pokemons deleted!';
+  }
+
   async removeBy(term: string) {
     const pokemon = await this.findOne(term);
     await pokemon.deleteOne();
@@ -76,10 +95,18 @@ export class PokemonsService {
 
   private handleExceptions(error: any) {
     if (error.code === 11000) {
-      const entries = Object.entries(error.keyValue);
-      throw new BadRequestException(
-        `Pokemon with ${entries[0][0]}: ${entries[0][1]} already exist`,
-      );
+      if (error.keyValue) {
+        const entries = Object.entries(error.keyValue);
+        throw new BadRequestException(
+          `Pokemon with ${entries[0][0]}: ${entries[0][1]} already exist`,
+        );
+      } else if (error.writeErrors) {
+        throw new BadRequestException(
+          `Pokemon ${error.writeErrors[0].err.op.name} with${
+            error.writeErrors[0].err.errmsg.split('key:')[1]
+          } already exist!`,
+        );
+      }
     }
     console.log(error);
     throw new InternalServerErrorException(

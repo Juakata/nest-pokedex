@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseArrayPipe,
 } from '@nestjs/common';
 import { PokemonsService } from './pokemons.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
@@ -19,6 +20,14 @@ export class PokemonsController {
   @Post()
   create(@Body() createPokemonDto: CreatePokemonDto) {
     return this.pokemonsService.create(createPokemonDto);
+  }
+
+  @Post('bulk')
+  createBulk(
+    @Body(new ParseArrayPipe({ items: CreatePokemonDto }))
+    createPokemonDto: CreatePokemonDto[],
+  ) {
+    return this.pokemonsService.createBulk(createPokemonDto);
   }
 
   @Get()
