@@ -16,6 +16,12 @@ $ npm install
 $ docker-compose up -d
 ```
 
+## Feed Data Base
+
+```data base
+GET request to ${base_url}/api/v1/seed
+```
+
 ## Running the app
 
 ```bash
