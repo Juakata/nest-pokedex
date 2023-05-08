@@ -22,6 +22,12 @@ $ docker-compose up -d
 GET request to ${base_url}/api/v1/seed
 ```
 
+## Environment Variables
+
+```env
+create a .env file based on the .env.example file
+```
+
 ## Running the app
 
 ```bash
