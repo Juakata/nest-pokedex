@@ -40,21 +40,28 @@ export class PokemonsService {
     }
   }
 
-  findAll(paginationDto: PaginationDto) {
+  async findAll(paginationDto: PaginationDto) {
     const {
       sort_by = 'no',
       limit = 0,
       page = 0,
       sort_order = 'asc',
     } = paginationDto;
-    const offset = limit * (page - 1);
-
-    return this.pokemonModel
+    const last = await this.pokemonModel.count();
+    let finalLimit = limit;
+    if (page > 0 && finalLimit === 0) finalLimit = 10;
+    let offset = finalLimit * (page - 1);
+    if (offset > last) offset = last;
+    const data = await this.pokemonModel
       .find()
-      .limit(limit)
+      .limit(finalLimit)
       .skip(offset)
       .sort({ [sort_by]: sort_order })
       .select('-__v');
+
+    const dataCount = data.length;
+
+    return { last, current: dataCount + offset, data };
   }
 
   async findOne(search: string) {
